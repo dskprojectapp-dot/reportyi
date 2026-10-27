@@ -1,0 +1,765 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ReportYi</title>
+    <meta name="description" content="ReportYi analytics dashboard landing page" />
+    <script type="module" src="/src/main.js"></script>
+    <style>
+      :root {
+        --bg: #07111d;
+        --bg-soft: #0d1b2a;
+        --panel: rgba(15, 28, 42, 0.88);
+        --panel-2: rgba(141, 170, 255, 0.08);
+        --card: #0f1d2d;
+        --card-2: #12263d;
+        --text: #eaf2ff;
+        --muted: #9ab0c8;
+        --line: rgba(255,255,255,0.08);
+        --primary: #6ec8ff;
+        --primary-2: #a681ff;
+        --green: #5fe3b1;
+        --yellow: #f9d66c;
+        --red: #ff7f9d;
+        --shadow: 0 20px 60px rgba(28, 60, 90, 0.45);
+      }
+
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background:
+          radial-gradient(circle at top left, rgba(84, 142, 247, 0.18), transparent 24%),
+          radial-gradient(circle at 80% 10%, rgba(166, 129, 255, 0.12), transparent 26%),
+          linear-gradient(180deg, #051018 0%, #081821 100%);
+        color: var(--text);
+      }
+
+      a { color: inherit; text-decoration: none; }
+      img { max-width: 100%; display: block; }
+
+      .container {
+        width: min(1200px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      .header {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        backdrop-filter: blur(12px);
+        background: rgba(7, 17, 29, 0.66);
+        border-bottom: 1px solid var(--line);
+      }
+
+      .nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 76px;
+        gap: 18px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 800;
+        letter-spacing: 0.02em;
+      }
+
+      .brand-mark {
+        width: 16px;
+        height: 16px;
+        border-radius: 4px;
+        background: linear-gradient(135deg, var(--primary), var(--primary-2));
+        box-shadow: 0 0 18px rgba(110, 200, 255, 0.8);
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 28px;
+        color: var(--muted);
+        font-size: 0.96rem;
+      }
+
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .btn {
+        appearance: none;
+        border: 1px solid transparent;
+        border-radius: 12px;
+        padding: 0.9rem 1.2rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 180ms ease;
+      }
+
+      .btn:hover { transform: translateY(-1px); }
+      .btn-primary {
+        background: linear-gradient(135deg, var(--primary), var(--primary-2));
+        color: #09161d;
+        box-shadow: 0 12px 24px rgba(110, 200, 255, 0.35);
+      }
+      .btn-ghost {
+        background: rgba(255,255,255,0.02);
+        border-color: rgba(255,255,255,0.08);
+        color: var(--text);
+      }
+
+      .hero {
+        padding: 74px 0 40px;
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: 1.08fr 0.92fr;
+        align-items: center;
+        gap: 52px;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0.5rem 0.8rem;
+        border: 1px solid rgba(110, 200, 255, 0.22);
+        border-radius: 999px;
+        background: rgba(110, 200, 255, 0.06);
+        color: var(--primary);
+        font-size: 0.8rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+      }
+
+      .eyebrow::before {
+        content: "";
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--green);
+        box-shadow: 0 0 18px rgba(95,227,177,0.8);
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(2.8rem, 5vw, 5rem);
+        line-height: 0.98;
+        letter-spacing: -0.06em;
+      }
+
+      .highlight {
+        background: linear-gradient(135deg, #d4e8ff, #89c5ff 45%, #b9a3ff 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+
+      .lead {
+        margin: 24px 0 30px;
+        max-width: 560px;
+        color: var(--muted);
+        font-size: 1.08rem;
+        line-height: 1.75;
+      }
+
+      .cta-row {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex-wrap: wrap;
+        margin-bottom: 28px;
+      }
+
+      .mini-trust {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        color: var(--muted);
+        font-size: 0.88rem;
+      }
+
+      .mini-trust .avatars {
+        display: flex;
+        align-items: center;
+      }
+
+      .mini-trust .avatars span {
+        width: 28px;
+        height: 28px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        border: 2px solid rgba(7, 17, 29, 0.9);
+        background: linear-gradient(135deg, #a6d8ff, #d0c3ff);
+        color: #0b1d2e;
+        font-size: 0.74rem;
+        font-weight: 800;
+      }
+
+      .mini-trust .avatars span + span { margin-left: -8px; }
+
+      .hero-art {
+        position: relative;
+        min-height: 560px;
+      }
+
+      .dashboard-shell {
+        position: relative;
+        width: min(100%, 560px);
+        margin-left: auto;
+        padding: 18px;
+        border-radius: 26px;
+        background: linear-gradient(180deg, rgba(12,22,33,0.9), rgba(9,18,28,0.94));
+        border: 1px solid var(--line);
+        box-shadow: var(--shadow);
+      }
+
+      .dashboard-window {
+        border-radius: 18px;
+        overflow: hidden;
+        border: 1px solid rgba(255,255,255,0.08);
+        background: linear-gradient(180deg, #101d2b, #0b1724);
+      }
+
+      .window-header {
+        height: 44px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0 16px;
+        background: rgba(255,255,255,0.03);
+      }
+
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+      }
+      .dot.red { background: var(--red); }
+      .dot.yellow { background: var(--yellow); }
+      .dot.green { background: var(--green); }
+
+      .panel-body {
+        padding: 18px;
+      }
+
+      .top-row {
+        display: flex;
+        gap: 14px;
+        margin-bottom: 18px;
+      }
+
+      .mini-stat, .chart-card, .list-card {
+        background: rgba(255,255,255,0.02);
+        border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 16px;
+      }
+
+      .mini-stat {
+        flex: 1;
+        padding: 14px 16px;
+      }
+      .mini-stat .label {
+        color: var(--muted);
+        font-size: 0.74rem;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+      }
+      .mini-stat strong {
+        display: block;
+        margin-top: 12px;
+        font-size: clamp(1.5rem, 2vw, 2rem);
+        letter-spacing: -0.05em;
+      }
+      .mini-stat span {
+        display: inline-block;
+        margin-top: 8px;
+        color: var(--green);
+        font-size: 0.8rem;
+        font-weight: 700;
+      }
+
+      .chart-card {
+        padding: 18px 18px 12px;
+        min-height: 200px;
+      }
+      .chart-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: var(--muted);
+        font-size: 0.8rem;
+        margin-bottom: 12px;
+      }
+      .chart {
+        height: 136px;
+        display: flex;
+        align-items: end;
+        gap: 9px;
+        padding: 18px 0 0;
+      }
+      .bar {
+        flex: 1;
+        border-radius: 999px 999px 0 0;
+        background: linear-gradient(180deg, rgba(110, 200, 255, 0.9), rgba(166, 129, 255, 0.85));
+        box-shadow: 0 8px 24px rgba(110, 200, 255, 0.18);
+      }
+
+      .lower-grid {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 18px;
+      }
+
+      .list-card {
+        padding: 18px;
+      }
+      .list-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 14px;
+        color: var(--muted);
+        font-size: 0.8rem;
+      }
+      .list-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(255,255,255,0.04);
+      }
+      .list-item:last-child { border-bottom: 0; }
+      .project {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .badge {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+      }
+      .badge.blue { background: var(--primary); }
+      .badge.purple { background: var(--primary-2); }
+      .badge.green { background: var(--green); }
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.45rem 0.6rem;
+        border-radius: 999px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: var(--text);
+      }
+      .chip.good { background: rgba(95,227,177,0.1); color: var(--green); }
+      .chip.warn { background: rgba(249,214,108,0.1); color: var(--yellow); }
+
+      .floating-card {
+        position: absolute;
+        background: rgba(10,19,29,0.9);
+        border: 1px solid rgba(255,255,255,0.08);
+        box-shadow: var(--shadow);
+        border-radius: 18px;
+        padding: 14px 16px;
+      }
+      .floating-card.one {
+        left: -18px;
+        bottom: 40px;
+      }
+      .floating-card.two {
+        right: -14px;
+        top: 16px;
+      }
+      .sm {
+        font-size: 0.72rem;
+        color: var(--muted);
+      }
+      .large {
+        margin-top: 10px;
+        font-weight: 800;
+        font-size: clamp(1.4rem, 2vw, 2.2rem);
+        letter-spacing: -0.06em;
+      }
+
+      .logos {
+        padding: 32px 0 18px;
+      }
+      .logos-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        opacity: 0.8;
+        color: rgba(234,242,255,0.56);
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase; 
+        font-size: 0.78rem;
+        padding: 0 18px;
+      }
+
+      .features {
+        padding: 56px 0 26px;
+      }
+      .section-label {
+        display: inline-block;
+        margin-bottom: 18px;
+        padding: 0.45rem 0.75rem;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.07);
+        color: var(--muted);
+        font-size: 0.76rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+      }
+
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 20px;
+        margin-top: 26px;
+      }
+
+      .feature-card {
+        padding: 28px 22px;
+        border-radius: 22px;
+        background: rgba(15, 29, 45, 0.7);
+        border: 1px solid rgba(255,255,255,0.06);
+      }
+      .icon {
+        width: 46px;
+        height: 46px;
+        border-radius: 14px;
+        display: grid;
+        place-items: center;
+        font-size: 1.2rem;
+        margin-bottom: 18px;
+        background: linear-gradient(135deg, rgba(110,200,255,0.2), rgba(166,129,255,0.2));
+        border: 1px solid rgba(255,255,255,0.08);
+      }
+
+      .feature-card h3 {
+        font-size: 1.15rem;
+        margin: 0 0 10px;
+      }
+      .feature-card p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .stats-band {
+        margin: 44px 0 20px;
+        padding: 22px;
+        border-radius: 24px;
+        border: 1px solid var(--line);
+        background: linear-gradient(180deg, rgba(17, 29, 42, 0.8), rgba(9,16,24,0.9));
+      }
+      .stats-row {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0,1fr));
+        gap: 18px;
+      }
+      .stat-box {
+        padding: 10px 14px;
+      }
+      .stat-box .value {
+        display: block;
+        font-size: clamp(1.8rem, 2vw, 2.3rem);
+        letter-spacing: -0.06em;
+        font-weight: 800;
+      }
+      .stat-box .label {
+        color: var(--muted);
+        font-size: 0.82rem;
+      }
+
+      .cta {
+        padding: 56px 0 90px;
+      }
+      .cta-box {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 22px;
+        padding: clamp(24px, 4vw, 42px);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 28px;
+        background: linear-gradient(135deg, rgba(17, 28, 40, 0.9), rgba(10, 18, 28, 0.95));
+        box-shadow: var(--shadow);
+      }
+      .cta-box h2 {
+        margin: 0;
+        font-size: clamp(2rem, 3vw, 3rem);
+        letter-spacing: -0.06em;
+      }
+      .cta-box p {
+        margin: 10px 0 0;
+        color: var(--muted);
+      }
+
+      .footer {
+        padding: 0 0 48px;
+        color: var(--muted);
+      }
+      .footer-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        padding-top: 18px;
+        border-top: 1px solid var(--line);
+      }
+
+      @media (max-width: 980px) {
+        .nav-links { display: none; }
+        .hero-grid, .lower-grid, .features-grid, .stats-row { grid-template-columns: 1fr; }
+        .hero-art { min-height: auto; }
+        .dashboard-shell { margin: 0 auto; }
+        .cta-box { flex-direction: column; align-items: flex-start; }
+      }
+
+      @media (max-width: 620px) {
+        .nav { height: 68px; }
+        .nav-actions .btn-ghost { display: none; }
+        h1 { font-size: 3rem; }
+        .top-row { flex-direction: column; }
+        .logos-inner { flex-wrap: wrap; justify-content: center; }
+        .cta-row { flex-direction: column; align-items: flex-start; }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <div class="container nav">
+        <a href="#" class="brand" aria-label="ReportYi home">
+          <span class="brand-mark"></span>
+          <span>ReportYi</span>
+        </a>
+        <nav class="nav-links" aria-label="Main Navigation">
+          <a href="#features">Features</a>
+          <a href="#solutions">Solutions</a>
+          <a href="#analytics">Analytics</a>
+          <a href="#pricing">Pricing</a>
+          <a href="#resources">Resources</a>
+        </nav>
+        <div class="nav-actions">
+          <button class="btn btn-ghost">Login</button>
+          <button class="btn btn-primary">Get started</button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="container hero-grid">
+          <div>
+            <div class="eyebrow">New analytics suite</div>
+            <h1>Turn your <span class="highlight">data</span> into smarter decisions.</h1>
+            <p class="lead">
+              ReportYi helps teams unify product metrics, customer insights, and revenue signals into one powerful dashboard that drives action.
+            </p>
+            <div class="cta-row">
+              <button class="btn btn-primary">Start free trial</button>
+              <button class="btn btn-ghost">Book a demo</button>
+            </div>
+            <div class="mini-trust">
+              <div class="avatars" aria-label="Customer avatars">
+                <span>J</span>
+                <span>A</span>
+                <span>M</span>
+              </div>
+              <span>Trusted by 10,000+ product teams</span>
+            </div>
+          </div>
+
+          <div class="hero-art" aria-label="Analytics dashboard preview">
+            <div class="floating-card one">
+              <div class="sm">Weekly growth</div>
+              <div class="large">+28.4%</div>
+            </div>
+            <div class="floating-card two">
+              <div class="sm">Avg. conversion</div>
+              <div class="large">7.6%</div>
+            </div>
+
+            <div class="dashboard-shell">
+              <div class="dashboard-window">
+                <div class="window-header">
+                  <span class="dot red"></span>
+                  <span class="dot yellow"></span>
+                  <span class="dot green"></span>
+                </div>
+                <div class="panel-body">
+                  <div class="top-row">
+                    <div class="mini-stat">
+                      <div class="label">Revenue</div>
+                      <strong>$128.4K</strong>
+                      <span>+12.8% vs last month</span>
+                    </div>
+                    <div class="mini-stat">
+                      <div class="label">Customers</div>
+                      <strong>24.1K</strong>
+                      <span>+6.4%</span>
+                    </div>
+                  </div>
+
+                  <div class="chart-card">
+                    <div class="chart-head">
+                      <span>Performance</span>
+                      <span>Q1</span>
+                    </div>
+                    <div class="chart" aria-label="Performance chart">
+                      <span class="bar" style="height: 48%"></span>
+                      <span class="bar" style="height: 63%"></span>
+                      <span class="bar" style="height: 74%"></span>
+                      <span class="bar" style="height: 60%"></span>
+                      <span class="bar" style="height: 86%"></span>
+                      <span class="bar" style="height: 92%"></span>
+                      <span class="bar" style="height: 88%"></span>
+                    </div>
+                  </div>
+
+                  <div class="lower-grid" style="margin-top: 18px;">
+                    <div class="list-card">
+                      <div class="list-head">
+                        <span>Top campaigns</span>
+                        <span>Live</span>
+                      </div>
+                      <div class="list-item">
+                        <div class="project">
+                          <span class="badge blue"></span>
+                          <span>Brand uplift</span>
+                        </div>
+                        <span class="chip good">87%</span>
+                      </div>
+                      <div class="list-item">
+                        <div class="project">
+                          <span class="badge purple"></span>
+                          <span>Retention pilot</span>
+                        </div>
+                        <span class="chip warn">74%</span>
+                      </div>
+                      <div class="list-item">
+                        <div class="project">
+                          <span class="badge green"></span>
+                          <span>Referral push</span>
+                        </div>
+                        <span class="chip good">91%</span>
+                      </div>
+                    </div>
+
+                    <div class="list-card">
+                      <div class="list-head">
+                        <span>Forecast</span>
+                        <span>2025</span>
+                      </div>
+                      <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 12px;">
+                        <div>
+                          <div class="sm">Projected</div>
+                          <div style="font-size: 2rem; font-weight: 800; letter-spacing: -0.06em;">$462K</div>
+                        </div>
+                        <div class="chip good" style="padding-inline: 0.8rem;">+19%</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="logos" aria-label="Trusted by brands">
+        <div class="container logos-inner">
+          <span>Stripe</span>
+          <span>Notion</span>
+          <span>Linear</span>
+          <span>Vercel</span>
+          <span>Shopify</span>
+        </div>
+      </section>
+
+      <section class="features" id="features">
+        <div class="container">
+          <span class="section-label">Features</span>
+          <h2 style="margin:0; font-size: clamp(2rem, 4vw, 3.1rem); letter-spacing: -0.06em;">Everything you need to turn insight into action.</h2>
+
+          <div class="features-grid">
+            <article class="feature-card">
+              <div class="icon">📊</div>
+              <h3>Unified analytics</h3>
+              <p>Combine product data, customer metrics, and sales signals in one source of truth for faster decisions.</p>
+            </article>
+
+            <article class="feature-card">
+              <div class="icon">⚡</div>
+              <h3>Live reporting</h3>
+              <p>Build real-time dashboards with automated refreshes and shareable views for every team and stakeholder.</p>
+            </article>
+
+            <article class="feature-card">
+              <div class="icon">🔒</div>
+              <h3>Secure by default</h3>
+              <p>Protect sensitive data with role-based access, audit trails, and enterprise-grade governance controls.</p>
+            </article>
+          </div>
+
+          <div class="stats-band">
+            <div class="stats-row">
+              <div class="stat-box">
+                <span class="value">4.8x</span>
+                <span class="label">Faster reporting</span>
+              </div>
+              <div class="stat-box">
+                <span class="value">99.9%</span>
+                <span class="label">Uptime</span>
+              </div>
+              <div class="stat-box">
+                <span class="value">2.3M</span>
+                <span class="label">Events processed</span>
+              </div>
+              <div class="stat-box">
+                <span class="value">24/7</span>
+                <span class="label">Monitoring</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="cta" id="pricing">
+        <div class="container">
+          <div class="cta-box">
+            <div>
+              <h2>Start building clarity into every decision.</h2>
+              <p>Get your first analytics workspace live in under 10 minutes.</p>
+            </div>
+            <button class="btn btn-primary">Try it free</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer-row">
+        <div class="brand">
+          <span class="brand-mark"></span>
+          <span>ReportYi</span>
+        </div>
+        <span>© 2026 ReportYi. All rights reserved.</span>
+      </div>
+    </footer>
+  </body>
+</html>
+    
